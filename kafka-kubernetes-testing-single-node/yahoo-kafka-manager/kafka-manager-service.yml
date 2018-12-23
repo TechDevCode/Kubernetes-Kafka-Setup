@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka-manager
+  namespace: kafka
+spec:
+  selector:
+    app: kafka-manager
+  ports:
+  - protocol: TCP
+    targetPort: 80
+    port: 32400
+    nodePort: 32400
+  type: NodePort
