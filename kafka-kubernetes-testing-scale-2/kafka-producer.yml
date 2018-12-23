@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: producer-test
+  labels:
+    app: producer-test
+spec:
+  type: NodePort
+  selector:
+    app: producer-test
+  ports:
+    - protocol: TCP
+      port: 8010
+      name: http
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: producer-test
+spec:
+  containers:
+  - name: producer-test
+    image: localhost:5000/tradesurveillance_dockerization_kafka_producer:latest
+    env:
+      - name: BOOTSTRAP_SERVERS_VALUE
+        value: "bootstrap.kafka:9092"
+      - name: TOPIC_NAME 
+        value: "check_new"
+      - name: FILE_PATH
+        value: "/opt/Kafka_Producer_Data/NEW_3min_DATA_1M_18FILES__1000000RPS_50000C_180S_"
+      - name: PER_SECOND_THROUGHPUT
+        value: "20000"
+      - name: KEY_FIELD
+        value: "15"
+      - name: NUMBER_OF_PRODUCERS
+        value: "1" 
+    volumeMounts:
+    - mountPath: /opt/Kafka_Producer_Data/NEW_3min_DATA_1M_18FILES__1000000RPS_50000C_180S_1.csv
+      name: test-volume
+  volumes:
+  - name: test-volume
+    hostPath:
+      path:  /home/rishikesh/NEW_3min_DATA_1M_18FILES__1000000RPS_50000C_180S_1.csv
+      type: File
